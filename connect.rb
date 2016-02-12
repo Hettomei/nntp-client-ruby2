@@ -1,14 +1,21 @@
 require 'socket'
 
+def read(s)
+  begin
+    l = s.gets.chomp
+    p l
+    break if l == "." || l[/^(480|501)/]
+  end while l
+end
 
 s = TCPSocket.open('ger.gmane.org', 119) do |s|
   p s.gets
   s.puts "list"
-  l = s.gets.chomp
-  while l
-    p l
+  read(s)
 
-    l = s.gets.chomp
-    l = nil if l == "."
-  end
+  s.puts 'post'
+  read(s)
+  s.puts 'AUTHINFO USER tgauthier'
+  read(s)
+
 end
